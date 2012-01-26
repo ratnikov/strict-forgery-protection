@@ -1,4 +1,24 @@
 class ActiveRecord::QueryTracker
+  class SqlEvent < ActiveSupport::Notifications::Event
+    def read?
+      result.respond_to?(:each)
+    end
+
+    def write?
+      !read?
+    end
+
+    private
+
+    def result
+      payload[:return]
+    end
+
+    def sql
+      payload[:sql]
+    end
+  end
+
   def self.record_sql_event(event)
     sql_events << event
   end
@@ -12,7 +32,7 @@ class ActiveRecord::QueryTracker
   end
 
   def call(*args)
-    self.class.record_sql_event ActiveSupport::Notifications::Event.new(*args)
+    self.class.record_sql_event SqlEvent.new(*args)
   end
 end
 
