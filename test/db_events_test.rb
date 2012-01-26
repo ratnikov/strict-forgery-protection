@@ -5,11 +5,14 @@ class DbEventsTest < ActiveSupport::TestCase
     assert_reads do
       Post.all
       Post.count
+      Post.find_by_id 42
+    end
+  end
 
+  def test_raw_reads
+    assert_reads do
       execute "SELECT * from posts"
       execute "SELECT total_changes()"
-
-      Post.find_by_id 42
     end
   end
 
