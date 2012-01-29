@@ -1,0 +1,16 @@
+== What does this gem do?
+
+This gems adds two measures to improve Rails CSRF[http://guides.rubyonrails.org/security.html#cross-site-request-forgery-csrf] protection security:
+
+1. An after filter checks if a request made any database write queries and triggers handle_unverified_request[https://github.com/rails/rails/blob/master/actionpack/lib/action_controller/metal/request_forgery_protection.rb#L84] if the request is not verified. This applies to both POST and GET requests.
+2. <tt>handle_unverified_request</tt> now throws an exception.
+
+=== How does it tell whether a query is read or write?
+
+Database adapters tend to return a fixnum of rows affected for write queries. If return from the adapter is an enumerable (e.g. an array), it is considered read. Otherwise, it is considered write.
+
+If you find an issue with this approach, please {contact me}[mailto:ratnikov@google.com].
+
+== License and Copyright
+
+All of the code is copyrighted by Google and is released under MIT license.
