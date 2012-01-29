@@ -47,7 +47,7 @@ class ControllerTest < ActionController::TestCase
   end
 
   def test_unverified_updates
-    assert_raises(ActionController::StrictForgeryProtection::AttemptError) { get :update, :id => Post.first, :authenticity_token => 'bad token' }
-    assert_raises(ActionController::StrictForgeryProtection::AttemptError) { post :update, :id => Post.first, :authenticity_token => 'bad token' }
+    assert_raises(ForgeryProtection::AttemptError) { get :update, :id => Post.first, :authenticity_token => 'bad token' }
+    assert_raises(ForgeryProtection::AttemptError) { post :update, :id => Post.first, :authenticity_token => 'bad token' }
   end
 end
