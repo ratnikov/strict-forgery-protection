@@ -13,7 +13,7 @@ module ForgeryProtection
     private
 
     def result
-      payload[:return]
+      payload[:result]
     end
 
     def sql

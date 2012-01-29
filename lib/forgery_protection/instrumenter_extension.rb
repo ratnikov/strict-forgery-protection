@@ -3,7 +3,7 @@ class ActiveSupport::Notifications::Instrumenter
     started = Time.now
 
     begin
-      yield.tap { |ret| payload[:return] = ret }
+      yield.tap { |result| payload[:result] = result }
     rescue Exception => e
       payload[:exception] = [e.class.name, e.message]
       raise e
