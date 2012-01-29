@@ -1,3 +1,4 @@
+require 'forgery_protection/instrumenter_extension'
 require 'forgery_protection/sql_event'
 
 module ForgeryProtection
@@ -19,5 +20,3 @@ module ForgeryProtection
     end
   end
 end
-
-ActiveSupport::Notifications.notifier.subscribe 'sql.active_record', ForgeryProtection::QueryTracker.new
