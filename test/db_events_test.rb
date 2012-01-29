@@ -53,11 +53,11 @@ class DbEventsTest < ActiveSupport::TestCase
   end
 
   def sql_events
-    ActiveRecord::QueryTracker.reset_sql_events
+    ForgeryProtection::QueryTracker.reset_sql_events
 
     yield
 
-    ActiveRecord::QueryTracker.sql_events
+    ForgeryProtection::QueryTracker.sql_events
   end
 
   def total_changes

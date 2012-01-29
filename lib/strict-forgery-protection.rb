@@ -1,5 +1,5 @@
-require 'active_record/extension'
-require 'active_record/query_tracker'
+require 'forgery_protection/ar_extension'
+require 'forgery_protection/query_tracker'
 
 module ActionController
   module StrictForgeryProtection
@@ -12,11 +12,11 @@ module ActionController
     private
 
     def verify_strict_authenticity
-      ActiveRecord::QueryTracker.reset_sql_events
+      ForgeryProtection::QueryTracker.reset_sql_events
 
       yield.tap do
 	provided_tokens = [ request.headers['X-CSRF-Token'], params[request_forgery_protection_token] ].compact
-	if ActiveRecord::QueryTracker.sql_events.any? { |e| e.write? } && !provided_tokens.include?(form_authenticity_token) 
+	if ForgeryProtection::QueryTracker.sql_events.any? { |e| e.write? } && !provided_tokens.include?(form_authenticity_token) 
 	  handle_unverified_request
 	end
       end
