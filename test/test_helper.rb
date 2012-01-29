@@ -7,6 +7,7 @@ require 'test/unit'
 
 require 'active_support'
 require 'active_record'
+require 'action_controller'
 require 'logger'
 
 require 'rails-xsrf-safety'
@@ -19,6 +20,8 @@ ActiveRecord::Base.establish_connection :adapter => 'sqlite3',
 ActiveRecord::Schema.define do
   create_table :posts, :force => true do |t|
     t.string :message
+
+    t.timestamps
   end
 end
 
