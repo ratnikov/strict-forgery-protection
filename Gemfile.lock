@@ -1,3 +1,9 @@
+PATH
+  remote: .
+  specs:
+    strict-forgery-protection (0.0.1)
+      rails (~> 3.1.0)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -90,4 +96,4 @@ PLATFORMS
 
 DEPENDENCIES
   activerecord-jdbcsqlite3-adapter
-  rails (~> 3.1.0)
+  strict-forgery-protection!
