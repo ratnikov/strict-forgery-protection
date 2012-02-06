@@ -4,6 +4,11 @@ module ForgeryProtection
   module ControllerExtension
     def self.included(controller)
       controller.around_filter :verify_strict_authenticity
+
+      def controller.skip_forgery_protection(*args)
+        skip_filter :verify_authenticity_token, *args
+        skip_filter :verify_strict_authenticity, *args
+      end
     end
 
     private
