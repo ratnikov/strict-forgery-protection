@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.homepage = 'http://github.com/ratnikov/strict-forgery-protection'
   s.summary = 'Extends Rails to be strict CSRF token protection'
 
-  s.add_dependency 'rails', '~> 3.1.0'
+  s.add_dependency 'rails', '~> 3.1'
 
   s.files = Dir[ 'lib/**/*' ]
   s.test_files = Dir[ 'test/**/*' ]
