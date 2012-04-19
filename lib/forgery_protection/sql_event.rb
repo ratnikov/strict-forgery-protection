@@ -3,11 +3,15 @@ require 'active_support'
 module ForgeryProtection
   class SqlEvent < ActiveSupport::Notifications::Event
     def read?
-      result.respond_to?(:each)
+      cache? || result.respond_to?(:each)
     end
 
     def write?
       !read?
+    end
+
+    def cache?
+      payload[:name] == 'CACHE'
     end
 
     private

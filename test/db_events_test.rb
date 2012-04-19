@@ -34,6 +34,12 @@ class DbEventsTest < ActiveSupport::TestCase
     end
   end
 
+  def test_cache
+    assert_reads do
+      Post.connection.cache { 2.times { Post.all } }
+    end
+  end
+
   private
 
   def assert_reads
