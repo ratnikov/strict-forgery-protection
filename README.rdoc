@@ -1,11 +1,23 @@
 == What does this gem do?
 
-This gems adds two measures to improve Rails CSRF[http://guides.rubyonrails.org/security.html#cross-site-request-forgery-csrf] protection security:
+This gem tries to help you detect CSRF[http://guides.rubyonrails.org/security.html#cross-site-request-forgery-csrf] vulnerabilities by making sure all requests that change the state of the application
+are verified.
 
-1. An after filter checks if a request made any database write queries and triggers handle_unverified_request[https://github.com/rails/rails/blob/master/actionpack/lib/action_controller/metal/request_forgery_protection.rb#L84] if the request is not verified. This applies to both POST and GET requests.
-2. <tt>handle_unverified_request</tt> now throws an exception.
+Application state changes currently supported:
 
-=== How does it tell whether a query is read or write?
+- Database updates (via ActiveRecord).
+
+This addresses to possible CSRF scenarios:
+
+1. You have a GET method that modifies database. Rails skips verification for GET methods and thus your action is ripe for an CSRF exploit.
+2. You had a POST action that wasn't modifying the database, so you removed Rails CSRF protection on it. Later on someone added database access, making your action ripe for CSRF exploit.
+
+In both cases this gem checks whether an action request verification occured. If not and database changes occured, it throws an exception.
+
+This gem also modifies Rails verified_request?[http://api.rubyonrails.org/classes/ActionController/RequestForgeryProtection.html#method-i-verified_request-3F] method to return false for GET requests.
+However, the behavior of allowing GET requests without verification (assuming they did not induce an application state change) is still permitted.
+
+=== How does it tell whether a database query is read or write?
 
 Database adapters tend to return a fixnum of rows affected for write queries. If return from the adapter is an enumerable (e.g. an array), it is considered read. Otherwise, it is considered write.
 
