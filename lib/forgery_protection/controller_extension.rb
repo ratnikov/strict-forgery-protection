@@ -12,14 +12,23 @@ module ForgeryProtection
 
     protected
 
+    def verify_authenticity_token
+      super.tap { @forgery_protection_invoked = true }
+    end
+
     def detect_unverified_db_update
       ForgeryProtection::QueryTracker.reset_sql_events
 
       yield.tap do
-	unless valid_forgery_protection_token? || ForgeryProtection::QueryTracker.sql_events.none? { |e| e.write? }
-          raise AttemptError, "A database update occurred for an unverified request"
-	end
+        if ForgeryProtection::QueryTracker.sql_events.any? { |e| e.write? }
+          raise AttemptError, "A database update occurred for an unverified request" unless valid_forgery_protection_token?
+          raise AttemptError, "A database update occured by forgery protection seems disabled" unless forgery_protection_invoked?
+        end
       end
+    end
+
+    def forgery_protection_invoked?
+      !!@forgery_protection_invoked
     end
 
     def valid_forgery_protection_token?

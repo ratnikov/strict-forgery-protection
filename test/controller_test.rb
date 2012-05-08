@@ -73,15 +73,20 @@ class ControllerTest < ActionController::TestCase
     assert_raises(ForgeryProtection::AttemptError) { post :write, :id => Post.last, :authenticity_token => 'bad token', :message => 'bye' }
   end
 
-  def test_unprotected_get_write
+  def test_unprotected_writes
+    # Unfortunately tripping up developers for just POSTs to bad token with protection disabled is not enough:
+    # They are very likely to make the requests via the form, which Rails will include a valid CSRF token for.
+    #
+    # This would cause this csrf vulnerability to be exposed only when a real attacker attempts to compromise
+    # production. Since our checks are done after the action executed, the error would be raised too late. Hence
+    # we try to trip up developers when they disable forgery protection and make state changing calls, even if
+    # a valid csrf token is specified.
     assert_raises(ForgeryProtection::AttemptError) do
-      get :unprotected_write, :id => Post.last, :authenticity_token => 'bad token', :message => 'bye' 
+      get :unprotected_write, :id => Post.last, :authenticity_token => @csrf_token, :message => 'bye'
     end
-  end
 
-  def test_unprotected_post_write
     assert_raises(ForgeryProtection::AttemptError) do
-      post :unprotected_write, :id => Post.last, :authenticity_token => 'bad token', :message => 'bye' 
+      post :unprotected_write, :id => Post.last, :authenticity_token => @csrf_token, :message => 'good bye'
     end
   end
 
