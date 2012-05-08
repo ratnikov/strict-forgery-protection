@@ -26,11 +26,5 @@ module ForgeryProtection
       form_authenticity_token == params[request_forgery_protection_token] ||
       form_authenticity_token == request.headers['X-CSRF-Token']
     end
-
-    def handle_unverified_request
-      # Rails allows get requests, so to preserve that behavior
-      # doing nothing if unverified request was a GET request.
-      request.get? || super
-    end
   end
 end
