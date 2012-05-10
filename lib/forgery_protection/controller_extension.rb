@@ -22,7 +22,7 @@ module ForgeryProtection
       yield.tap do
         if ForgeryProtection::QueryTracker.sql_events.any? { |e| e.write? }
           raise AttemptError, "A database update occurred for an unverified request" unless valid_forgery_protection_token?
-          raise AttemptError, "A database update occured by forgery protection seems disabled" unless forgery_protection_invoked?
+          raise AttemptError, "A database update occured but forgery protection seems disabled" unless forgery_protection_invoked?
         end
       end
     end
