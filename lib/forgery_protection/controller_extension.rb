@@ -3,7 +3,7 @@ module ForgeryProtection
 
   module ControllerExtension
     def self.included(controller)
-      controller.around_filter :detect_unverified_db_update
+      controller.around_filter :detect_unverified_db_update, :if => proc { |c| c.protect_against_forgery? }
 
       def controller.permit_unverified_state_changes(*args)
         skip_filter :detect_unverified_db_update, *args

@@ -96,4 +96,13 @@ class ControllerTest < ActionController::TestCase
 
     assert_not_equal before, Post.last.updated_at, "Should update the record"
   end
+
+  def test_global_forgery_disabled
+    @controller.allow_forgery_protection = false
+
+    assert_nothing_raised do
+      get :write, :id => Post.last, :message => 'get bye'
+      post :write, :id => Post.last, :message => 'post bye'
+    end
+  end
 end
