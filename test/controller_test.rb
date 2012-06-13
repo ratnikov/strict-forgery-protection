@@ -66,11 +66,16 @@ class ControllerTest < ActionController::TestCase
   end
 
   def test_unverified_get_write
-    assert_raises(ForgeryProtection::AttemptError) { get :write, :id => Post.last, :authenticity_token => 'bad token', :message => 'bye' }
+    # GET requests do not perform authenticity verification, since such requests are not intended to change server state. Still, people
+    # write applications that have GET requests change the state all the time. While we cannot offer full protection, we at least trip
+    # up the developer after the update has taken place in hopes that to draw attention to the problem and that they will fix it.
+    assert_raises(ForgeryProtection::AttemptError) { get :write, :id => Post.last, :authenticity_token => 'bad token', :message => 'xsrf exploit' }
   end
 
   def test_unverified_post_write
-    assert_raises(ForgeryProtection::AttemptError) { post :write, :id => Post.last, :authenticity_token => 'bad token', :message => 'bye' }
+    assert_raises(ForgeryProtection::AttemptError) { post :write, :id => Post.last, :authenticity_token => 'bad token', :message => 'xsrf exploit' }
+
+    assert_not_equal 'xsrf exploit', Post.last.message, 'Should prevent exploit update'
   end
 
   def test_unprotected_writes

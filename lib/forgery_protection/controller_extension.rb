@@ -12,6 +12,10 @@ module ForgeryProtection
 
     protected
 
+    def handle_unverified_request
+      raise AttemptError, 'Encountered unverified request'
+    end
+
     def verify_authenticity_token
       super.tap { @forgery_protection_invoked = true }
     end
